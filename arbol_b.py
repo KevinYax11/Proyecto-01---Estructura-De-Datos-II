@@ -115,6 +115,24 @@ class ArbolB:
             for hijo in nodo.hijos:
                 self._buscar_servicio_en_nodo(hijo, tipo_servicio, resultados)
 
+    def buscar_por_ubicacion(self, ubicacion):
+        """Busca todos los proveedores de una ubicación específica"""
+        resultados = []
+        self._buscar_ubicacion_en_nodo(self.raiz, ubicacion.lower(), resultados)
+        return resultados
+
+    def _buscar_ubicacion_en_nodo(self, nodo, ubicacion, resultados):
+        """Busca por ubicación en un nodo específico"""
+        # Buscar en las claves del nodo actual
+        for datos in nodo.datos:
+            if datos['ubicacion'].lower() == ubicacion:
+                resultados.append(datos)
+
+        # Si no es hoja, buscar en todos los hijos
+        if not nodo.es_hoja:
+            for hijo in nodo.hijos:
+                self._buscar_ubicacion_en_nodo(hijo, ubicacion, resultados)
+
     def obtener_todos_ordenados(self, orden_por='nombre'):
         """Obtiene todos los proveedores ordenados"""
         todos = []
@@ -124,6 +142,8 @@ class ArbolB:
             return sorted(todos, key=lambda x: x['nombre'].lower())
         elif orden_por == 'calificacion':
             return sorted(todos, key=lambda x: x['calificacion'], reverse=True)
+        elif orden_por == 'ubicacion':
+            return sorted(todos, key=lambda x: x['ubicacion'].lower())
         else:
             return todos
 
